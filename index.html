@@ -1,0 +1,50 @@
+<h1>Chat app</h1>
+
+<ul id="messages"></ul>
+<form id="message-form" action="">
+    <input type="hidden" id='lastMessageReceived' value = '' />
+    <input type="text"
+        name="message"
+        id="message"
+        autocomplete="off" />
+    <button>Send!</button>
+</form>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const messagesList = document.getElementById('messages')
+    const messageForm = document.getElementById('message-form')
+    messageForm.addEventListener('submit', e => {
+        e.preventDefault()
+        const inputMessage = document.getElementById('message')
+
+        let jsonSend = {
+            origin : document.getElementById('lastMessageReceived').value,
+            message : inputMessage.value
+        };
+
+        socket.emit('newMessage', jsonSend)
+
+        inputMessage.value = ''
+    })
+
+    socket.on('messageResponse', msg => {
+        
+        /*if(msg.origin != ''){
+            const messageOrigin = document.createElement('li')
+            messageOrigin.innerHTML = msg.origin;
+            messagesList.appendChild(messageOrigin)
+        }*/
+
+        const messageItem = document.createElement('li');
+        if(msg.friendlyMessage != '' && msg.friendlyMessage != undefined)
+            messageItem.innerHTML = msg.friendlyMessage;
+        else
+            messageItem.innerHTML = msg.message;
+
+        messagesList.appendChild(messageItem);
+
+        document.getElementById('lastMessageReceived').value = msg.message;
+    })
+</script>
