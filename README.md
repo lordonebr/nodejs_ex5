@@ -14,5 +14,5 @@ Professor: Samuel Martins
   npm install
   npm start
  - URL para acesso do projeto no browser:  
-  http://localhost:3000/login  
+  http://localhost:3000
   
